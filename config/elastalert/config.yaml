@@ -1,7 +1,6 @@
-# /etc/elastalert/config.yaml 
-es_host: "localhost"
+es_host: "elasticsearch"
 es_port: 9200
- 
+
 writeback_index: "elastalert_status"
 buffer_time:
   minutes: 5
@@ -9,4 +8,10 @@ run_every:
   minutes: 1
 alert_time_limit:
   days: 2
-rules_folder: /etc/elastalert/rules
+
+rules_folder: /opt/elastalert/rules
+
+# ─── Telegram settings ──────────────────────────────────────────────
+telegram_bot_token: $TELEGRAM_BOT_TOKEN
+telegram_room_id: $TELEGRAM_ROOM_ID
+telegram_parse_mode: "HTML"

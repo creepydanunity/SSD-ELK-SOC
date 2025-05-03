@@ -34,4 +34,4 @@ filebeat.modules:
                   - regexp.message: 'sudo:.*authentication failure'
 
 output.logstash:
-  hosts: ["localhost:5044"]
+  hosts: ["logstash:5044"]

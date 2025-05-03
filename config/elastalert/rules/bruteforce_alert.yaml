@@ -2,17 +2,22 @@ name: Brute Force Login Attempt Detection
 type: frequency
 index: dangerous*
 num_events: 10
-timeframe: 600
+timeframe:
+  seconds: 600
+
 filter:
   - term:
-      tags: ["failed_password"]
+      tags: "failed_password"
+
 alert:
-  - "slack"
+  - "telegram"
   - "command"
-slack:
-  slack_webhook_url: "HIDDEN"
-  slack_title: "(SIEM Alert) Possible Bruteforce attack detected from IP: {{ _source.ip }}"
+
+alert_text_type: alert_text_only
+alert_text: "(SIEM Alert) Possible brute-force login from IP: {0}"
+alert_text_args:
+  - _source.ip
+
 command:
-  - "bash"
   - "/usr/local/bin/block_ip.sh"
-  - "{{ match['source.ip'] }}"
+  - "{{ match.source.ip }}"

@@ -12,14 +12,24 @@ services:
       - "9300:9300"
     networks:
       - soc_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 15s
+      retries: 5
+      start_period: 10s
+      timeout: 20s
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.10.0
+    image: docker.elastic.co/logstash/logstash:8.9.0
     container_name: logstash
+    environment:
+      - LS_PATH_CONF=/etc/logstash
+    env_file:
+      - .env
     volumes:
-      - ./config/logstash:/etc/logstash
-      - ./config/ufw_patterns:/etc/logstash/patterns/ufw_patterns
-      - ./data/logstash:/usr/share/logstash/data
+      - ./config/logstash:/usr/share/logstash/config:ro
+      - ./data/logstash:/var/log/logstash
+      - ./config/geo/GeoLite2-City.mmdb:/usr/share/GeoIP/GeoLite2-City.mmdb:ro
     ports:
       - "5044:5044"
     networks:
@@ -27,28 +37,47 @@ services:
     depends_on:
       - elasticsearch
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+    ports:
+      - "5045:5601"
+    networks:
+      - soc_network
+    depends_on:
+      - elasticsearch
+
   filebeat:
-    image: docker.elastic.co/beats/filebeat:7.10.0
+    image: docker.elastic.co/beats/filebeat:8.9.0
     container_name: filebeat
+    command: [ "filebeat", "-e", "--strict.perms=false" ]
     volumes:
-      - ./config/filebeat.yml:/etc/filebeat/filebeat.yml
-      - /var/log:/var/log
+      - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/log:/var/log:ro
+    environment:
+      - OUTPUT_HOST=logstash:5044
     networks:
       - soc_network
     depends_on:
       - logstash
 
   elastalert:
-    image: yassinemaaroufi/elastalert
+    image: ghcr.io/jertel/elastalert2/elastalert2:2
+    env_file:
+      - .env
     container_name: elastalert
+    restart: unless-stopped
     volumes:
-      - ./config/elastalert/config.yaml:/etc/elastalert/config.yaml
-      - ./config/elastalert/rules:/etc/elastalert/rules
-      - ./config/elastalert/block_ip.sh:/usr/local/bin/block_ip.sh
+      - ./config/elastalert/config.yaml:/opt/elastalert/config.yaml:ro
+      - ./config/elastalert/rules:/opt/elastalert/rules:ro
+      - ./config/elastalert/block_ip.sh:/usr/local/bin/block_ip.sh:ro
     networks:
       - soc_network
     depends_on:
       - elasticsearch
+    entrypoint: ["/opt/elastalert/run.sh"]
 
 networks:
   soc_network:
