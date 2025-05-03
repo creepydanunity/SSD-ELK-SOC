@@ -1,0 +1,17 @@
+# /etc/elastalert/rules/high_traffic_alert.yaml 
+
+name: High Traffic Alert
+type: frequency
+index: dangerous*
+num_events: 1000
+timeframe: 60
+filter:
+  - term:
+      tags: ["high_traffic"]
+alert:
+  - "slack"
+  - "command"
+slack:
+  slack_webhook_url: "HIDDEN"
+  slack_title: "(SIEM Alert) Possible DDoS attack detected from IP: {{ _source.ip }}"
+command: ["/usr/local/bin/block_ip.sh", "{match[source.ip]}"]

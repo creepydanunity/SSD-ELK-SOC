@@ -1,0 +1,37 @@
+# /etc/filebeat/filebeat.yml
+
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/ufw.log
+
+filebeat.modules:
+  - module: system
+    syslog:
+      enabled: true
+      var.paths: ["/var/log/syslog*"]
+      processors:
+        - drop_event:
+          when:
+            not:
+              or:
+                - regexp:
+                    message: 'error|critical|failed|unauthorized'
+                - equals:
+                    log.level: "error"
+    auth:
+      enabled: true
+      var.paths: ["/var/log/auth.log*"]
+      processors:
+        - drop_event:
+            when:
+              not:
+                or:
+                  - regexp.message: 'Failed password for'
+                  - regexp.message: 'authentication failure'
+                  - regexp.message: 'sudo:.*incorrect password'
+                  - regexp.message: 'sudo:.*authentication failure'
+
+output.logstash:
+  hosts: ["localhost:5044"]

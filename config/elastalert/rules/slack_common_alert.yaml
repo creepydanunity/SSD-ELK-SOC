@@ -1,0 +1,11 @@
+# /etc/elastalert/rules/slack_common_alert.yaml 
+name: Dummy Webhook Incident
+type: any
+index: dangerous*
+filter:
+  - terms:
+      tags: ["malicious_ip", "failed_password", "sudo_auth_failure", "firewall_denied_or_blocked"]
+alert:
+  - "slack"
+slack_webhook_url: "HIDDEN"
+slack_title: "SIEM Alert: Suspicious Activity"

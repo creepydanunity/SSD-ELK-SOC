@@ -1,0 +1,3 @@
+# /etc/logstash/patterns/ufw_patterns
+ 
+UFW_COMMON %{TIMESTAMP_ISO8601:timestamp} %{HOSTNAME:host} ufw\[%{POSINT:pid}\]: \* %{WORD:action} IN=%{DATA:in_interface} OUT=%{DATA:out_interface} SRC=%{IP:src_ip} DST=%{IP:dst_ip} LEN=%{INT:length} TOS=%{DATA:tos} PREC=%{DATA:prec} TTL=%{INT:ttl} ID=%{INT:id} PROTO=%{WORD:protocol} SPT=%{INT:src_port} DPT=%{INT:dst_port} %{GREEDYDATA:additional}

@@ -1,0 +1,55 @@
+services:
+  elasticsearch:
+    build: .
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xmx2g -Xms2g"
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - soc_network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.0
+    container_name: logstash
+    volumes:
+      - ./config/logstash:/etc/logstash
+      - ./config/ufw_patterns:/etc/logstash/patterns/ufw_patterns
+      - ./data/logstash:/usr/share/logstash/data
+    ports:
+      - "5044:5044"
+    networks:
+      - soc_network
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.10.0
+    container_name: filebeat
+    volumes:
+      - ./config/filebeat.yml:/etc/filebeat/filebeat.yml
+      - /var/log:/var/log
+    networks:
+      - soc_network
+    depends_on:
+      - logstash
+
+  elastalert:
+    image: yassinemaaroufi/elastalert
+    container_name: elastalert
+    volumes:
+      - ./config/elastalert/config.yaml:/etc/elastalert/config.yaml
+      - ./config/elastalert/rules:/etc/elastalert/rules
+      - ./config/elastalert/block_ip.sh:/usr/local/bin/block_ip.sh
+    networks:
+      - soc_network
+    depends_on:
+      - elasticsearch
+
+networks:
+  soc_network:
+    driver: bridge
