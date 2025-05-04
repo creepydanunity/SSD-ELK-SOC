@@ -7,3 +7,4 @@ fi
 
 /usr/bin/sudo /usr/sbin/ufw deny from "$IP"
 /usr/bin/sudo /usr/sbin/ufw reload
+echo "IP $IP blocked successfully."

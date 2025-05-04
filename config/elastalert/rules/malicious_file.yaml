@@ -1,0 +1,21 @@
+name: Malicious File Alert
+type: frequency
+index: dangerous*
+num_events: 1
+timeframe: 30
+filter:
+  - term:
+      tags: "malicious_file"
+alert:
+  - "telegram"
+  - "command"
+
+alert_text_type: alert_text_only
+alert_text: "(SIEM Alert) Malicious file detected with hash: {{ _source.file_hash }}"
+alert_text_args:
+  - _source.ip
+  - _source.file_path
+
+command:
+  - "/usr/local/bin/block_file.sh"
+  - "{{ match.source.file_hash }}"

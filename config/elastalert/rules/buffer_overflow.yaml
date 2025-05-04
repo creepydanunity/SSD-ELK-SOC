@@ -1,0 +1,21 @@
+name: Buffer Overflow Alert
+type: frequency
+index: dangerous*
+num_events: 1
+timeframe: 30
+filter:
+  - term:
+      tags: "buffer_overflow"
+alert:
+  - "telegram"
+  - "command"
+
+alert_text_type: alert_text_only
+alert_text: "(SIEM Alert) Buffer overflow detected from IP: {{ _source.ip }}"
+
+alert_text_args:
+  - _source.ip
+
+command:
+  - "/usr/local/bin/block_ip.sh"
+  - "{{ match.source.ip }}"
