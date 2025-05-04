@@ -11,11 +11,11 @@ alert:
   - "command"
 
 alert_text_type: alert_text_only
-alert_text: "(SIEM Alert) Malicious file detected with hash: {{ _source.file_hash }}"
+alert_text: "(SIEM Alert) Malicious file detected in path: {{ _source.file_path }}"
 alert_text_args:
   - _source.ip
   - _source.file_path
 
 command:
   - "/usr/local/bin/block_file.sh"
-  - "{{ match.source.file_hash }}"
+  - "{{ match.source.file_path }}"
