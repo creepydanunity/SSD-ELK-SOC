@@ -18,9 +18,9 @@ The primary goal of this project was to design, deploy, and operate a basic Secu
 - Document the architecture, configurations, and outcomes.
 
 ### Team Responsibilities
-- **Ya:** SIEM deployment & configuration, log ingestion pipelines, threat-intel enrichment, incident simulation.  
-- **Vika:** Alert‐generation logic, event–IOC correlation, vulnerable web app development.  
-- **Nika:** Docker orchestration, alert integration, vulnerable web app development.
+- **Daniil Vasilev:** SIEM deployment & configuration, log ingestion pipelines, threat-intel enrichment, incident simulation.  
+- **Vika Patrina:** Alert‐generation logic, event–IOC correlation, vulnerable web app development.  
+- **Nika Chekhonina:** Docker orchestration, alert integration, vulnerable web app development.
 
 ---
 
@@ -50,7 +50,7 @@ We built a scalable, fully Docker-ized pipeline for collecting, processing, stor
    - **ElastAlert** generated alerts, forwarding them via Telegram/Zammad.
 
 ### Infrastructure Diagram
-![ELK-SIEM Data Flow](dq.png)
+![alt text](image-5.png)
 
 ---
 
@@ -90,24 +90,35 @@ The project successfully demonstrated how an open-source ELK-based SIEM can be d
 ## Configuration Files
 
 All project configuration files are available on GitHub:  
-[https://github.com/creepydanunity/SSD-ELK-SOC](Link)
+[Link](https://github.com/creepydanunity/SSD-ELK-SOC)
+
+---
+
+## Demo
+
+Demo is available via [Link](https://docs.google.com/presentation/d/1vZ-q7XS_rzLHP9Rt47VGsgcxIhUjMox_/edit?usp=sharing&ouid=102878431335207234594&rtpof=true&sd=true)
 
 ---
 
 ## Screenshots
 
 #### Indexed Events Overview  
-![Alerted Events](observe.png)
+![alt text](images/image.png)
 
 #### Indexed Groups by Tag  
-![Alert Groups](alerts_groups.png)
+![alt text](images/image-1.png)
 
 #### GeoIP Enrichment Example  
-![GeoIP Data](geo.png)
+![alt text](images/image-3.png)
 
-#### Parsed AlienVault IOCs  
-![OTX Indicators](AlientVaultParsed.png)  
-![OTX Types](AlienVaultParsed2.png)
+#### AlienVault IOC
+![alt text](images/image-8.png)
 
-#### Alerted Events Overview  
-![Alerted Events](observe.png)
+#### Kibana Dashboard
+![alt text](images/image-4.png)
+
+#### Telegram Alert
+![alt text](images/image-6.png)
+
+#### Vulnerable App
+![alt text](images/image-7.png)
