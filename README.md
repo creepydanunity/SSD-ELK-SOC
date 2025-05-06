@@ -1,7 +1,6 @@
 # Deploying SOC with ELK-based SIEM
 
-**Author:** Innopolis University, Secure System Development  
-**Date:** 06 May 2025  
+## Innopolis University, Secure System Development - 06 May 2025  
 
 ---
 
