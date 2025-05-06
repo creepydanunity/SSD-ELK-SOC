@@ -1,7 +1,7 @@
 # Deploying SOC with ELK-based SIEM
 
-**Author:** Innopolis University, Secure System Development  
-**Date:** 06 May 2025  
+## Innopolis University, Secure System Development  
+## 06 May 2025  
 
 ---
 
@@ -18,9 +18,9 @@ The primary goal of this project was to design, deploy, and operate a basic Secu
 - Document the architecture, configurations, and outcomes.
 
 ### Team Responsibilities
-- **Ya:** SIEM deployment & configuration, log ingestion pipelines, threat-intel enrichment, incident simulation.  
-- **Vika:** Alert‐generation logic, event–IOC correlation, vulnerable web app development.  
-- **Nika:** Docker orchestration, alert integration, vulnerable web app development.
+- **Daniil Vasilev:** SIEM deployment & configuration, log ingestion pipelines, threat-intel enrichment, incident simulation.  
+- **Vika Patrina:** Alert‐generation logic, event–IOC correlation, vulnerable web app development.  
+- **Nika Chekhonina:** Docker orchestration, alert integration, vulnerable web app development.
 
 ---
 
