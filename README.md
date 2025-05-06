@@ -49,7 +49,7 @@ We built a scalable, fully Docker-ized pipeline for collecting, processing, stor
    - **ElastAlert** generated alerts, forwarding them via Telegram/Zammad.
 
 ### Infrastructure Diagram
-![alt text](image-5.png)
+![alt text](images/image-5.png)
 
 ---
 
