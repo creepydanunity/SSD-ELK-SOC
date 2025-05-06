@@ -1,0 +1,37 @@
+name: Malicious Activity → Telegram
+type: any
+index: malicious-logs-*
+
+filter:
+  - terms:
+      tags.keyword:
+        - malicious_sql_injection
+        - malicious_xss
+        - potential_buffer_overflow
+        - malicious_ip
+        - malicious_file
+        - malicious_domain
+        - malicious_email
+        - sudo_usage
+        - sudo_auth_failure
+        - high_traffic
+        - firewall_denied_or_blocked
+
+threshold: 1
+
+timeframe:
+  minutes: 5
+
+alert:
+  - "telegram"
+
+telegram_bot_token: "7913261230:AAGP1vJLoKQnyTFzIM3OoxmEwKkQjvCVfzc"
+telegram_room_id: "884905627"
+
+alert_text: |
+  *Alert:* {0[name]}
+  *Time:* {0[@timestamp]}
+  *Host:* `{0[host][name]}`
+  *Tags:* {0[tags]}
+  *Message:* ``{0[message]}``
+telegram_parse_mode: "markdown"

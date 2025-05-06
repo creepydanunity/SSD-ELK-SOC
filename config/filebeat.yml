@@ -1,10 +1,15 @@
-# /etc/filebeat/filebeat.yml
-
 filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /var/log/ufw.log
+      - /var/log/backend_logs/*.log
+    tags: ["backend_logs"]
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/test_logs/*.log
+    tags: ["test_logs"]
 
 filebeat.modules:
   - module: system

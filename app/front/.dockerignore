@@ -1,0 +1,7 @@
+docker-entrypoint.sh
+*.sh
+node_modules
+build
+dist
+.git
+.vscode

@@ -23,7 +23,7 @@ services:
     image: docker.elastic.co/logstash/logstash:8.9.0
     container_name: logstash
     environment:
-      - LS_PATH_CONF=/etc/logstash
+      - LS_PATH_CONF=/etc/logstash/config
     env_file:
       - .env
     volumes:
@@ -35,7 +35,8 @@ services:
     networks:
       - soc_network
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.9.0
@@ -47,7 +48,8 @@ services:
     networks:
       - soc_network
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.9.0
@@ -55,7 +57,7 @@ services:
     command: [ "filebeat", "-e", "--strict.perms=false" ]
     volumes:
       - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - /var/log:/var/log:ro
+      - log-volume:/var/log:ro
     environment:
       - OUTPUT_HOST=logstash:5044
     networks:
@@ -72,13 +74,65 @@ services:
     volumes:
       - ./config/elastalert/config.yaml:/opt/elastalert/config.yaml:ro
       - ./config/elastalert/rules:/opt/elastalert/rules:ro
-      - ./config/elastalert/block_ip.sh:/usr/local/bin/block_ip.sh:ro
     networks:
       - soc_network
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     entrypoint: ["/opt/elastalert/run.sh"]
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: vuln_app
+      POSTGRES_PASSWORD: vuln_app
+      POSTGRES_DB: onlinestore
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./app/back/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vuln_app -d onlinestore"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  backend:
+    build: ./app/back
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: app.py
+      SQLALCHEMY_DATABASE_URI: postgresql://vuln_app:vuln_app@db:5432/onlinestore
+    volumes:
+      - log-volume:/var/log
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  frontend:
+    build: 
+      context: ./app/front
+      dockerfile: Dockerfile
+    entrypoint: []
+    command: ["bash", "-lc", "npm start"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  log-volume:
+  postgres_data:
 
 networks:
   soc_network:
+    driver: bridge
+    
+  app-network:
     driver: bridge

@@ -1,6 +1,7 @@
 # /etc/logstash/pipelines.yml
 
+- pipeline.id: backend_logs
+  path.config: "/usr/share/logstash/config/pipeline-main/logstash-main.conf"
 - pipeline.id: otx_pipeline
-  path.config: "/usr/share/logstash/config/pipeline/logstash-otx.conf"
-- pipeline.id: main_logs_pipeline
-  path.config: "/usr/share/logstash/config/pipeline/logstash.conf"
+  path.config: "/usr/share/logstash/config/pipeline-otx/logstash-otx.conf"
+
